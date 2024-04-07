@@ -16,11 +16,18 @@ export default function RegisterPage() {
   return (
     <div className="w-screen h-screen flex md:grid md:grid-cols-2">
       <div className="flex flex-center align-center justify-center my-auto mx-auto flex-col">
-        <CardHeader className="pb-12 gap-4 text-center  w-[450px]">
-          <CardTitle>Create an account</CardTitle>
-          <CardDescription>
-            You are a couple of clicks away from making Your life healthier
-          </CardDescription>
+        <CardHeader className="pb-12 gap-4 w-[450px] flex">
+          <div className="flex flex-row items-center justify-center pb-4">
+            <span className="text-6xl font-bold ">Hello stranger!</span>
+            <img
+              src="logo.png"
+              alt="logo"
+              className="h-16 mx-auto object-contain "
+            />
+          </div>
+          <span className="text-3xl text-stone-800">
+            Wanna make Your life healthier with us?
+          </span>
         </CardHeader>
         <CardContent className="flex flex-col gap-6 pb-16">
           <div className="grid w-full items-center gap-1.5">

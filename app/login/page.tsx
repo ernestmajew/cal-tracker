@@ -18,13 +18,13 @@ export default function LoginPage() {
   return (
     <div className="w-screen h-screen flex md:grid md:grid-cols-2">
       <div className="flex flex-center align-center justify-center my-auto mx-auto flex-col">
-        <CardHeader className="pb-12 gap-4 text-center w-[450px]">
+        <CardHeader className="pb-12 gap-4 w-[450px] flex flex-row items-center justify-center">
+          <span className="text-6xl font-bold ">Welcome back!</span>
           <img
             src="logo.png"
             alt="logo"
-            className="w-48 mx-auto mb-12 object-contain"
+            className="h-16 mx-auto object-contain "
           />
-          <CardTitle>Welcome back!</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-6 pb-16">
           <div className="grid w-full items-center gap-1.5">
