@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Model representing a category of food
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  Products Product[]
+}
+
+// Model representing nutritional information of a food
+model Nutrition {
+  id            Int     @id @default(autoincrement())
+  calories      Int
+  protein       Float
+  carbohydrates Float
+  fat           Float
+  product       Product @relation(fields: [productId], references: [id])
+  productId     Int     @unique
+}
+
+// Model representing a food item
+model Product {
+  id         Int        @id @default(autoincrement())
+  name       String
+  category   Category   @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  nutrition  Nutrition?
+  Meal       Meal?      @relation(fields: [mealId], references: [id])
+  mealId     Int?
+}
+
+// Model representing a meal
+model Meal {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[] // Meals can consist of multiple food items
+  day      Day       @relation(fields: [dayId], references: [id])
+  dayId    Int
+}
+
+// Model representing a day
+model Day {
+  id     Int      @id @default(autoincrement())
+  date   DateTime @default(now())
+  meals  Meal[]
+  user   User     @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+// Model representing a user
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+  days     Day[]
+}
