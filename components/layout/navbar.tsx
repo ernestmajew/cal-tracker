@@ -1,20 +1,13 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
 import Link from "next/link";
-import { FaAngleRight, FaAngleLeft } from "react-icons/fa6";
 import { FaChartBar } from "react-icons/fa";
 import { BiSolidDashboard } from "react-icons/bi";
-import { IoPerson } from "react-icons/io5";
-import { useRouter } from "next/router";
-import { usePathname } from "next/navigation";
+import LogoutForm from "../logoutForm";
+import { getSession } from "@/utils/actions";
 
-export const Navbar = () => {
-  const [currentPath, setCurrentPath] = useState("");
-  const path = usePathname();
-  const isActive = (href: string) => currentPath === href;
-
+export const Navbar = async () => {
+  const session = await getSession();
+  console.log(session);
+  if (!session.isLoggedIn) return <></>;
   return (
     <>
       <div className="w-28 h-full z-10 backdrop-blur-lg transition-all overflow-clip flex-shrink-0">
@@ -24,23 +17,39 @@ export const Navbar = () => {
           </Link>
 
           <div className="flex flex-col gap-2 bg-slate-100 p-2 rounded-full">
-            <Link href="dashboard" className="flex items-center gap-2 p-4 text-slate-800">
-                <BiSolidDashboard size={24} />
-            </Link>
-            <Link href="/history" className="flex items-center gap-2 p-4 text-slate-800">
-                <FaChartBar size={24} />
-            </Link>
-            <Link href="dashboard" className="flex items-center gap-2 p-4 text-slate-800">
+            <Link
+              href="dashboard"
+              className="flex items-center gap-2 p-4 text-slate-800"
+            >
               <BiSolidDashboard size={24} />
             </Link>
-            <Link href="dashboard" className="flex items-center gap-2 p-4 text-slate-800">
+            <Link
+              href="/history"
+              className="flex items-center gap-2 p-4 text-slate-800"
+            >
+              <FaChartBar size={24} />
+            </Link>
+            <Link
+              href="dashboard"
+              className="flex items-center gap-2 p-4 text-slate-800"
+            >
+              <BiSolidDashboard size={24} />
+            </Link>
+            <Link
+              href="dashboard"
+              className="flex items-center gap-2 p-4 text-slate-800"
+            >
               <BiSolidDashboard size={24} />
             </Link>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6 items-center">
             <Link href="/login">
-              <img src="running_0.jpg" className="w-14 h-12 rounded-full object-fill"></img>
+              <img
+                src="running_0.jpg"
+                className="w-12 h-12 rounded-full object-fill"
+              ></img>
             </Link>
+            <LogoutForm></LogoutForm>
           </div>
         </div>
       </div>

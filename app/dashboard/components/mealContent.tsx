@@ -5,7 +5,7 @@ const MealContent = () => {
   return (
     <div className="flex flex-col px-8 py-4 border-b-[1px] border-border -mx-8">
       <span className="flex justify-between items-center leading-3">
-        Eggs from free wybieg XL
+        Eggs
         <MealRemoveButton></MealRemoveButton>
       </span>
       <span className="pb-2">24g</span>

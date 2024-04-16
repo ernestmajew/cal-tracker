@@ -26,7 +26,7 @@ export default function RegisterPage() {
             />
           </div>
           <span className="text-3xl text-stone-800">
-            Wanna make Your life healthier with us?
+            Wanna make Your life healthier?
           </span>
         </CardHeader>
         <CardContent className="flex flex-col gap-6 pb-16">
