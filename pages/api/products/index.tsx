@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../prisma/prismaClient';
+import {middleware} from "@/utils/middleware";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method, body } = req;
-
+    await middleware(req);
     switch (method) {
         case 'GET':
             try {
