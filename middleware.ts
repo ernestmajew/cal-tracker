@@ -24,22 +24,26 @@ export async function middleware(req: NextApiRequest) {
 
 
     if (req.url && req.url.startsWith('/login') && !verifiedToken){
-        return
+        return NextResponse.rewrite(new URL('/login', req.url))
     }
 
     if (req.url && req.url.includes('/login') && verifiedToken){
-        redirect("/dashboard");
+        return NextResponse.rewrite(new URL('/dashboard', req.url))
+    }
+
+    if (req.url && req.url.includes('/api/products') && verifiedToken){
+        return NextResponse.rewrite(new URL('/api/products', req.url))
     }
 
     if (!verifiedToken && req.url){
-        redirect("/");
+        return NextResponse.rewrite(new URL('/login', req.url))
     }
 
     return
 }
 
-export const config = {
-    matcher: [
-        '/api/products/*'
-    ]
-}
+// export const config = {
+//     matcher: [
+//         '/api/products/*'
+//     ]
+// }
