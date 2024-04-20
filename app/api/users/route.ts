@@ -7,14 +7,14 @@ import {comparePasswords, hashPassword} from "@/utils/password";
 //  "email":"user1@example.com",
 //  "password":"$2b$12$WbSsK8ISbmsX.BHa1bqo6.zbTDb5QfNOwt4XkgsWQXt11ZbSIIadW"}]
 
-export const GET = async (req: Request)=> {
-    try {
-        const users = await prisma.user.findMany({});
-        return new NextResponse(JSON.stringify(users), {status: 200});
-    } catch (error) {
-        return new NextResponse('Internal Server Error' + error, {status: 500});
-    }
-}
+// export const GET = async (req: Request)=> {
+//     try {
+//         const users = await prisma.user.findMany({});
+//         return new NextResponse(JSON.stringify(users), {status: 200});
+//     } catch (error) {
+//         return new NextResponse('Internal Server Error' + error, {status: 500});
+//     }
+// }
 
 export const POST = async (req: Request)=> {
     try {

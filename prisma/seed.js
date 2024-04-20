@@ -8,41 +8,13 @@ const prisma = new PrismaClient();
 async function seed() {
     try {
         // Drop existing data
-        await prisma.nutrition.deleteMany({});
-        await prisma.product.deleteMany({});
-        await prisma.meal.deleteMany({});
-        await prisma.day.deleteMany({});
-        await prisma.category.deleteMany({});
-        await prisma.user.deleteMany({});
+        // await prisma.productWeight.deleteMany({});
+        // await prisma.meal.deleteMany({});
+        // await prisma.user.deleteMany({});
+        // await prisma.product.deleteMany({});
+        // await prisma.nutrition.deleteMany({});
 
-        // Create categories
-        const category1 = await prisma.category.create({
-            data: {
-                name: 'Vegetables',
-            },
-        });
-
-        const category2 = await prisma.category.create({
-            data: {
-                name: 'Fruits',
-            },
-        });
-
-        // Create foods
-        const product1 = await prisma.product.create({
-            data: {
-                name: 'Carrot',
-                categoryId: category1.id,
-            },
-        });
-
-        const productd2 = await prisma.product.create({
-            data: {
-                name: 'Apple',
-                categoryId: category2.id,
-            },
-        });
-
+        // Create users
         const user1 = await prisma.user.create({
             data: {
                 username: 'user1',
@@ -51,59 +23,71 @@ async function seed() {
             },
         });
 
-        // Create days
-        const day1 = await prisma.day.create({
+        // Create products and their nutrition
+        const product1 = await prisma.product.create({
             data: {
-                userId: 1, // Replace with the actual user ID
-                date: new Date(), // Assuming 'date' is another required field
+                name: 'Carrot',
+                nutrition: {
+                    create: {
+                        calories: 25,
+                        protein: 0.6,
+                        carbs: 5.8,
+                        fat: 0.1,
+                    },
+                },
             },
         });
 
-        // Create meals with dayId correctly assigned
+        const product2 = await prisma.product.create({
+            data: {
+                name: 'Apple',
+                nutrition: {
+                    create: {
+                        calories: 52,
+                        protein: 0.3,
+                        carbs: 14,
+                        fat: 0.2,
+                    },
+                },
+            },
+        });
+
+        // Create meals
         const meal1 = await prisma.meal.create({
             data: {
                 name: 'Breakfast',
-                dayId: day1.id,
+                date: new Date(),
+                userId: user1.id,
+                products: {
+                    create: [
+                        {
+                            weight: 200,
+                            productId: product1.id,
+                        },
+                        {
+                            weight: 150,
+                            productId: product2.id,
+                        },
+                    ],
+                },
             },
         });
 
         const meal2 = await prisma.meal.create({
             data: {
                 name: 'Lunch',
-                dayId: day1.id,
+                date: new Date(),
+                userId: user1.id,
+                products: {
+                    create: [
+                        {
+                            weight: 300,
+                            productId: product1.id,
+                        },
+                    ],
+                },
             },
         });
-
-        const meal3 = await prisma.meal.create({
-            data: {
-                name: 'Dinner',
-                dayId: day1.id,
-            },
-        });
-
-        // Create nutrition
-        const nutrition1 = await prisma.nutrition.create({
-            data: {
-                calories: 100,
-                protein: 5,
-                carbohydrates: 20,
-                fat: 2,
-                productId: product1.id,
-            },
-        });
-
-        const nutrition2 = await prisma.nutrition.create({
-            data: {
-                calories: 50,
-                protein: 1,
-                carbohydrates: 10,
-                fat: 0.5,
-                productId: productd2.id,
-            },
-        });
-
-        // Create users
-
 
         console.log('Database seeded successfully');
     } catch (error) {

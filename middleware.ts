@@ -19,7 +19,8 @@ export async function middleware(req: NextApiRequest) {
 //middleware is working on specified endpoints in matcher
 export const config = {
     matcher: [
-        '/api/products',
-        '/api/products/:id(\\d+)'
+        // '/api/products',
+        '/api/products/:id(\\d+)',
+        '/api/users/:id(\\d+)'
     ]
 }

@@ -15,58 +15,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Model representing a category of food
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  Products Product[]
-}
-
-// Model representing nutritional information of a food
-model Nutrition {
-  id            Int     @id @default(autoincrement())
-  calories      Int
-  protein       Float
-  carbohydrates Float
-  fat           Float
-  product       Product @relation(fields: [productId], references: [id])
-  productId     Int     @unique
-}
-
-// Model representing a food item
-model Product {
-  id         Int        @id @default(autoincrement())
-  name       String
-  category   Category   @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  nutrition  Nutrition?
-  Meal       Meal?      @relation(fields: [mealId], references: [id])
-  mealId     Int?
-}
-
-// Model representing a meal
-model Meal {
-  id       Int       @id @default(autoincrement())
-  name     String
-  products Product[] // Meals can consist of multiple food items
-  day      Day       @relation(fields: [dayId], references: [id])
-  dayId    Int
-}
-
-// Model representing a day
-model Day {
-  id     Int      @id @default(autoincrement())
-  date   DateTime @default(now())
-  meals  Meal[]
-  user   User     @relation(fields: [userId], references: [id])
-  userId Int
-}
-
-// Model representing a user
 model User {
   id       Int    @id @default(autoincrement())
-  username String @unique
   email    String @unique
+  username String
   password String
-  days     Day[]
+  meals    Meal[]
+}
+
+model Nutrition {
+  id       Int       @id @default(autoincrement())
+  calories Float?
+  protein  Float?
+  carbs    Float?
+  fat      Float?
+  sugar    Float?
+  Product  Product[]
+}
+
+model Product {
+  id            Int             @id @default(autoincrement())
+  name          String
+  nutrition     Nutrition       @relation(fields: [nutritionId], references: [id])
+  nutritionId   Int
+  ProductWeight ProductWeight[]
+}
+
+model Meal {
+  id            Int             @id @default(autoincrement())
+  name          String
+  date          DateTime
+  createdAt     DateTime        @default(now())
+  products      ProductWeight[]
+  totalCalories Float?
+  totalProtein  Float?
+  totalCarbs    Float?
+  totalFat      Float?
+  totalSugar    Float?
+  user          User?           @relation(fields: [userId], references: [id])
+  userId        Int?
+}
+
+model ProductWeight {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  weight    Float
+  meal      Meal    @relation(fields: [mealId], references: [id])
+  mealId    Int
+  productId Int
 }
