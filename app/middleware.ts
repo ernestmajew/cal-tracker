@@ -1,15 +1,8 @@
 "use server";
 
-import {NextApiRequest, NextApiResponse} from "next";
-import jwt from "jsonwebtoken";
-import {getSession, verifyAuth} from "@/utils/actions";
-import { getIronSession} from "iron-session";
-import {defaultSession, SessionData, sessionOptions } from "@/utils/lib";
-import {cookies} from "next/headers";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
+import {NextApiRequest} from "next";
+import {verifyAuth} from "@/utils/actions";
 import {NextResponse} from "next/server";
-import {redirect} from "next/navigation";
 
 export async function middleware(req: NextApiRequest) {
 
@@ -24,6 +17,10 @@ export async function middleware(req: NextApiRequest) {
 
 
     if (req.url && req.url.startsWith('/login') && !verifiedToken){
+        return NextResponse.rewrite(new URL('/login', req.url))
+    }
+
+    if (req.url && req.url.startsWith('/dashboard') && !verifiedToken){
         return NextResponse.rewrite(new URL('/login', req.url))
     }
 
