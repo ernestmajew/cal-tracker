@@ -1,18 +1,7 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import LoginForm from "./components/loginForm";
 
 export default function LoginPage() {
   return (
@@ -26,16 +15,8 @@ export default function LoginPage() {
             className="h-16 mx-auto object-contain "
           />
         </CardHeader>
-        <CardContent className="flex flex-col gap-6 pb-16">
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" id="email" placeholder="Email" />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Input type="password" id="password" placeholder="Password" />
-          </div>
-          <Button className="mt-6">Login</Button>
+        <CardContent>
+          <LoginForm />
         </CardContent>
         <div className="flex flex-col justify-center align-center w-fit mx-auto">
           <Separator className="mx-auto mb-16"></Separator>

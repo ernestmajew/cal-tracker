@@ -26,8 +26,6 @@ const MealCard = ({ name }: MealCardProps) => {
         <MealContent></MealContent>
         <MealContent></MealContent>
         <MealContent></MealContent>
-        <MealContent></MealContent>
-        <MealContent></MealContent>
       </CardContent>
     </Card>
   );
