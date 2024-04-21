@@ -1,12 +1,16 @@
 import prisma from "@/prisma/prismaClient";
 import {NextResponse} from "next/server";
+import {getSession} from "@/utils/actions";
 
 export const GET = async (req: Request, context: { params: any})=> {
-    const userId = parseInt(context.params.id);
+    const session = await getSession();
     try {
+        if (!session.id) {
+            return new NextResponse('Session not found', { status: 404 });
+        }
         const user = await prisma.user.findUnique({
             where: {
-                id: userId,
+                id: parseInt(session.id),
             }
         });
         if (!user) {
@@ -19,11 +23,14 @@ export const GET = async (req: Request, context: { params: any})=> {
 }
 
 export const DELETE = async (req: Request, context: { params: any})=> {
-    const userId = parseInt(context.params.id);
+    const session = await getSession();
     try {
+        if (!session.id) {
+            return new NextResponse('Session not found', { status: 404 });
+        }
         const deletedUser = await prisma.user.delete({
             where: {
-                id: userId,
+                id: parseInt(session.id),
             },
         });
         if (!deletedUser) {

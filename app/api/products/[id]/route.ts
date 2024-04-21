@@ -7,6 +7,9 @@ export const GET = async (req: Request, context: { params: any})=> {
         const product = await prisma.product.findUnique({
             where: {
                 id: productId,
+            },
+            include: {
+                nutrition: true
             }
         });
         if (!product) {
@@ -47,6 +50,9 @@ export const PUT = async (req: Request, context: { params: any})=> {
             data: {
                 name,
             },
+            include: {
+                nutrition: true
+            }
         });
         if (!updatedProduct) {
             return new NextResponse(JSON.stringify({ error: 'Product not found' }), {status: 404});

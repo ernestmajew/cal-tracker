@@ -4,9 +4,6 @@ import {NextResponse} from "next/server";
 export const GET = async (req: Request)=> {
     try {
         const products = await prisma.product.findMany({
-            include: {
-                category: true,
-            },
         });
         return new NextResponse(JSON.stringify(products), {status: 200});
     } catch (error) {
@@ -17,11 +14,21 @@ export const GET = async (req: Request)=> {
 export const POST = async (req: Request)=> {
     try {
         const body = await req.json();
-        const { name, categoryId } = body;
+        const { name, nutrition } = body;
+        const newNutrition = await prisma.nutrition.create({
+            data: {
+                ...nutrition,
+            },
+        });
         const newProduct = await prisma.product.create({
             data: {
                 name,
-                categoryId,
+                nutrition: {
+                    connect: { id: newNutrition.id },
+                },
+            },
+            include: {
+                nutrition: true,
             },
         });
         return new NextResponse(JSON.stringify(newProduct), {status: 201});

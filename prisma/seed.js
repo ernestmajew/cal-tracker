@@ -1,5 +1,6 @@
 // Import Prisma Client
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require("bcrypt");
 
 // Create an instance of PrismaClient
 const prisma = new PrismaClient();
@@ -8,18 +9,19 @@ const prisma = new PrismaClient();
 async function seed() {
     try {
         // Drop existing data
-        // await prisma.productWeight.deleteMany({});
-        // await prisma.meal.deleteMany({});
-        // await prisma.user.deleteMany({});
-        // await prisma.product.deleteMany({});
-        // await prisma.nutrition.deleteMany({});
+        await prisma.productWeight.deleteMany({});
+        await prisma.meal.deleteMany({});
+        await prisma.user.deleteMany({});
+        await prisma.product.deleteMany({});
+        await prisma.nutrition.deleteMany({});
+        const password = await bcrypt.hash('password123', 10);
 
         // Create users
         const user1 = await prisma.user.create({
             data: {
                 username: 'user1',
                 email: 'user1@example.com',
-                password: 'password123',
+                password: password,
             },
         });
 

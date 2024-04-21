@@ -21,6 +21,6 @@ export const config = {
     matcher: [
         // '/api/products',
         '/api/products/:id(\\d+)',
-        '/api/users/:id(\\d+)'
+        '/api/users'
     ]
 }
