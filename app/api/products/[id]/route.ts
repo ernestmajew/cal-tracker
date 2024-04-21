@@ -9,8 +9,8 @@ export const GET = async (req: Request, context: { params: any})=> {
                 id: productId,
             },
             include: {
-                category: true,
-            },
+                nutrition: true
+            }
         });
         if (!product) {
             return new NextResponse(JSON.stringify({ error: 'Product not found' }), {status: 404});
@@ -42,15 +42,17 @@ export const PUT = async (req: Request, context: { params: any})=> {
     const productId = parseInt(context.params.id);
     try {
         const body = await req.json();
-        const { name, categoryId } = body;
+        const { name } = body;
         const updatedProduct = await prisma.product.update({
             where: {
                 id: productId,
             },
             data: {
                 name,
-                categoryId,
             },
+            include: {
+                nutrition: true
+            }
         });
         if (!updatedProduct) {
             return new NextResponse(JSON.stringify({ error: 'Product not found' }), {status: 404});

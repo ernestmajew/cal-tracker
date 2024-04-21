@@ -1,7 +1,7 @@
 import prisma from "@/prisma/prismaClient";
 import {NextResponse} from "next/server";
 import {comparePasswords} from "@/utils/password";
-import {getSession, login} from "@/utils/actions";
+import {getSession} from "@/utils/actions";
 import jwt from "jsonwebtoken";
 
 export const GET = async (req: Request)=> {
