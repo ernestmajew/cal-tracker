@@ -34,7 +34,7 @@ export const DELETE = async (req: Request, context: { params: any})=> {
         }
         return new NextResponse(JSON.stringify(deletedProduct), {status: 200});
     } catch (error) {
-        return new NextResponse('Internal Server Error' + error, {status: 500});
+        return new NextResponse('Internal Server Error: ' + error, {status: 500});
     }
 }
 
