@@ -31,6 +31,14 @@ export const login = async (
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
+  if (!email) {
+    return { error: "Input email!" };
+  }
+
+  if (!password) {
+    return { error: "Input password!" };
+  }
+
   try {
     const user = await prisma.user.findUnique({ where: { email } });
 
@@ -63,15 +71,26 @@ export const register = async (
   const repeatPassword = formData.get("repeat-password") as string;
   const eula = formData.get("repeat-password") as string;
 
+  if (!username) {
+    return { error: "Input username!" };
+  }
+  if (!email) {
+    return { error: "Input email!" };
+  }
+  if (!repeatPassword) {
+    return { error: "Repeat password!" };
+  }
+  if (!password) {
+    return { error: "Input password!" };
+  }
+  if (!eula) {
+    return { error: "You need to accept terms of condition." };
+  }
+  if (password !== repeatPassword) {
+    return { error: "Passwords are not the same." };
+  }
+
   try {
-    if (!eula) {
-      return { error: "You need to accept terms of condition." };
-    }
-
-    if (password !== repeatPassword) {
-      return { error: "Passwords are not the same." };
-    }
-
     const hash = await hashPassword(password);
 
     const existingUser = await prisma.user.findUnique({
