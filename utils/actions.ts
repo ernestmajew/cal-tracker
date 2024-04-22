@@ -1,11 +1,18 @@
 "use server";
 
-import {sessionOptions, SessionData, defaultSession, UserJwtPayload} from "@/utils/lib";
+import {
+  sessionOptions,
+  SessionData,
+  defaultSession,
+  UserJwtPayload,
+} from "@/utils/lib";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
-import {jwtVerify} from "jose";
+import { jwtVerify } from "jose";
+import prisma from "@/prisma/prismaClient";
+import { comparePasswords, hashPassword } from "./password";
 
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
@@ -21,22 +28,98 @@ export const login = async (
   prevState: undefined | string,
   formData: FormData
 ) => {
-  const session = await getSession();
-  const formUsername = formData.get("email") as string;
-  const formPassword = formData.get("password") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-  console.log(formUsername);
-
-  if (formUsername !== "admin@caltracker.com") {
-    return { error: "Wrong Credentials!" };
+  if (!email) {
+    return { error: "Input email!" };
   }
 
-  session.id = "1";
-  session.username = "admin@caltracker.com";
-  session.isLoggedIn = true;
-  session.token = jwt.sign({ username: formUsername }, process.env.JWT_SECRET!);
-  await session.save();
+  if (!password) {
+    return { error: "Input password!" };
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      return { error: "User with this email does not exist!" };
+    }
+    const isPasswordMatch = await comparePasswords(password, user.password);
+    if (!isPasswordMatch) {
+      return { error: "Incorrect password" };
+    }
+    const session = await getSession();
+    session.id = String(user.id);
+    session.username = user.email;
+    session.isLoggedIn = true;
+    session.token = jwt.sign({ username: user.email }, process.env.JWT_SECRET!);
+    await session.save();
+  } catch (error) {
+    return { error: "Internal server error" };
+  }
   redirect("/dashboard");
+};
+
+export const register = async (
+  prevState: undefined | string,
+  formData: FormData
+) => {
+  const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const repeatPassword = formData.get("repeat-password") as string;
+  const eula = formData.get("repeat-password") as string;
+
+  if (!username) {
+    return { error: "Input username!" };
+  }
+  if (!email) {
+    return { error: "Input email!" };
+  }
+  if (!repeatPassword) {
+    return { error: "Repeat password!" };
+  }
+  if (!password) {
+    return { error: "Input password!" };
+  }
+  if (!eula) {
+    return { error: "You need to accept terms of condition." };
+  }
+  if (password !== repeatPassword) {
+    return { error: "Passwords are not the same." };
+  }
+
+  try {
+    const hash = await hashPassword(password);
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (existingUser) {
+      return { error: "Provided email is already used." };
+    }
+
+    const newUser = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: hash,
+      },
+      select: {
+        username: true,
+        email: true,
+      },
+    });
+
+    console.log(newUser);
+  } catch (error) {
+    return { error: "Internal server error" };
+  }
+  redirect("/login");
 };
 
 export const logout = async () => {
@@ -49,12 +132,14 @@ export const verifyAuth = async () => {
   try {
     const session = await getSession();
     const token = session.token as string;
-    const verified = await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
-    console.log("VERIFY")
+    const verified = await jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    );
+    console.log("VERIFY");
     console.log(verified);
     return verified.payload as UserJwtPayload;
   } catch (error) {
-    throw new Error('Your token has expired.');
+    throw new Error("Your token has expired.");
   }
-}
-
+};

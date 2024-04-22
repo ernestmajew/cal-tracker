@@ -10,7 +10,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <form action={formAction} className="flex flex-col gap-6 pb-16">
+      <form action={formAction} className="flex flex-col gap-4 pb-16">
         <div className="grid w-full items-center gap-1.5">
           <Label htmlFor="email">Email</Label>
           <Input type="email" id="email" name="email" placeholder="Email" />
