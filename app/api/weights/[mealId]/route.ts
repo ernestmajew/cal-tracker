@@ -17,7 +17,11 @@ export const GET = async (req: Request, context: { params: any})=> {
                 mealId: mealId
             },
             include: {
-                product: true
+                product: {
+                    include: {
+                        nutrition: true
+                    }
+                }
             }
         });
         if (!weights) {
