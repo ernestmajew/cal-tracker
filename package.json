@@ -19,6 +19,8 @@
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "csv-parser": "^3.0.0",
+    "fs": "^0.0.1-security",
     "iron-session": "^8.0.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.356.0",
