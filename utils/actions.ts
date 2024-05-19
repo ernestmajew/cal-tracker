@@ -10,9 +10,11 @@ import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
+import {calculateTotalNutrition, weights} from "@/utils/totalNutrition";
 import { jwtVerify } from "jose";
 import prisma from "@/prisma/prismaClient";
 import { comparePasswords, hashPassword } from "./password";
+
 
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
