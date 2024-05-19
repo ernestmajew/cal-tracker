@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import RegisterForm from "./components/registerForm";
 
 export default function RegisterPage() {
   return (
@@ -29,28 +30,8 @@ export default function RegisterPage() {
             Wanna make Your life healthier?
           </span>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6 pb-16">
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input type="email" id="email" placeholder="Email" />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="password">Password</Label>
-            <Input type="password" id="password" placeholder="Password" />
-          </div>
-          <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="repeat-password">Repeat password</Label>
-            <Input
-              type="password"
-              id="repeat-password"
-              placeholder="Repeat password"
-            />
-          </div>
-          <div className="flex text-sm gap-4 my-2">
-            <Checkbox id="#eula">Agree to terms and conditions</Checkbox>
-            <label htmlFor="eula">I agree to terms of conditions</label>
-          </div>
-          <Button>Register</Button>
+        <CardContent>
+          <RegisterForm></RegisterForm>
         </CardContent>
         <div className="flex flex-col justify-center align-center w-fit mx-auto">
           <Separator className="mx-auto mb-16"></Separator>
