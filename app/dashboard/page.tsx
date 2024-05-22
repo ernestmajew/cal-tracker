@@ -40,14 +40,15 @@ const DashboardPage = () => {
         `/api/meals?date=${encodeURIComponent(day.toISOString())}`
       );
       const data = await response.json();
-      setMeals(data.meals);
+      console.log(data);
+      setMeals(data);
 
       let calories = 0;
       let protein = 0;
       let carbs = 0;
       let fat = 0;
 
-      data.meals.forEach((meal: Meal) => {
+      data.forEach((meal: Meal) => {
         calories += meal.totalCalories || 0;
         protein += meal.totalProtein || 0;
         carbs += meal.totalCarbs || 0;
@@ -66,6 +67,16 @@ const DashboardPage = () => {
     }
   };
 
+  const handleMealDelete = async (id: number) => {
+    try {
+      const response = await fetch(`/api/meals/${id}`, {
+        method: "DELETE",
+      }).then(handleMealAdded);
+    } catch (error) {
+      console.error("Failed to delete meal:", error);
+    }
+  };
+
   useEffect(() => {
     fetchMeals(selectedDay);
   }, [selectedDay]);
@@ -80,37 +91,29 @@ const DashboardPage = () => {
 
   return (
     <>
-      <div className="py-8 flex justify-between items-center">
+      <div className="py-8 flex justify-between items-center h-100vh">
         <h1 className="font-bold text-3xl">Dashboard</h1>
         <WeekDaySelector onDayChange={handleDayChange} />
       </div>
-      <div className="w-full h-full flex items-center justify-start gap-8 overflow-y-scroll pb-24">
-        {meals?.map((meal, i) => (
-          <div
-            key={i}
-            className="w-96 h-full overflow-x-clip overflow-y-scroll"
-          >
-            <MealCard name={meal.name} />
-          </div>
-        ))}
+      <div className="w-full h-full flex items-center justify-start gap-4 pb-8 overflow-x-scroll overflow-y-hidden">
+        {meals && meals.length > 0 ? (
+          meals.map((meal) => (
+            <MealCard
+              key={meal.id}
+              meal={meal}
+              handleMealDelete={() => handleMealDelete(meal.id)}
+            />
+          ))
+        ) : (
+          <></>
+        )}
         <AddMealDialog
           selectedDay={selectedDay}
           onMealAdded={handleMealAdded}
         />
       </div>
       <div className="flex justify-center items-center w-full p-8 pl-0">
-        <DataPanel
-          nutrients={{
-            totalCalories: 1000,
-            totalCarbs: 160,
-            totalFat: 70,
-            totalProtein: 170,
-            goalCalories: 1500,
-            goalCarbs: 240,
-            goalFat: 80,
-            goalProtein: 150,
-          }}
-        />
+        <DataPanel nutrients={nutrients} />
       </div>
     </>
   );

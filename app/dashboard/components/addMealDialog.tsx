@@ -35,6 +35,7 @@ const AddMealDialog: React.FC<AddMealDialogProps> = ({
 }) => {
   const [newMealName, setNewMealName] = useState<string | null>(null);
   const [customMealName, setCustomMealName] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleMealNameChange = (name: string) => {
     setNewMealName(name);
@@ -50,17 +51,33 @@ const AddMealDialog: React.FC<AddMealDialogProps> = ({
       userId: (await getSession()).id,
     };
 
-    console.log(data);
+    try {
+      const response = await fetch("/api/meals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    onMealAdded();
+      if (response.ok) {
+        onMealAdded();
+        setIsDialogOpen(false);
+      } else {
+        console.error("Failed to add meal");
+      }
+    } catch (error) {
+      console.error("Failed to add meal:", error);
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger className="w-48 flex justify-center items-center">
-        <Button className="w-20 h-20 rounded-full text-5xl justify-center items-center p-0 m-0 bg-slate-100 text-slate-400 hover:bg-slate-200">
-          <FaPlus />
-        </Button>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger
+        className="w-28 h-full flex justify-center items-center bg-slate-100 rounded-xl text-slate-400 hover:text-slate-500 hover:bg-slate-200 transition-all flex-shrink-0"
+        onClick={() => setIsDialogOpen(true)}
+      >
+        <FaPlus size={48} />
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add meal</DialogTitle>

@@ -50,37 +50,37 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
   const session = await getSession();
+
+  if (!session.id) {
+    return new NextResponse("Session not found", { status: 404 });
+  }
+
   try {
     const body = await req.json();
-    const { name, products } = body;
-    if (!session.id) {
-      return new NextResponse("Session not found", { status: 404 });
+    const { name, date, createdAt, userId } = body;
+
+    if (!name || !date || !createdAt || !userId) {
+      return new NextResponse("Invalid request body", { status: 400 });
     }
+
     const newMeal = await prisma.meal.create({
       data: {
         name,
-        date: new Date(),
-        products: {
-          createMany: {
-            data: products.map((product: Product) => ({
-              weight: product.weight,
-              product: {
-                connect: { id: product.productId },
-              },
-            })),
-          },
-        },
+        date: new Date(date),
+        createdAt: new Date(createdAt),
         user: {
-          connect: { id: parseInt(session.id) },
+          connect: { id: parseInt(userId) },
         },
       },
       include: {
-        products: true,
         user: true,
       },
     });
+
     return new NextResponse(JSON.stringify(newMeal), { status: 201 });
   } catch (error) {
-    return new NextResponse("Internal Server Error" + error, { status: 500 });
+    return new NextResponse("Internal Server Error: " + error.message, {
+      status: 500,
+    });
   }
 };
