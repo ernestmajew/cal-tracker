@@ -14,16 +14,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { SlOptionsVertical } from "react-icons/sl";
 import { MdDelete, MdEdit } from "react-icons/md";
+import MealRenameDialog from "./mealRenameDialog";
 
 interface MealCardProps {
   meal: Meal;
   handleMealDelete: VoidFunction;
+  handleMealRename: (mealId: number, newMealName: string) => void;
 }
 
-const MealCard = ({ meal, handleMealDelete }: MealCardProps) => {
+const MealCard = ({
+  meal,
+  handleMealDelete,
+  handleMealRename,
+}: MealCardProps) => {
   return (
-    <Card className="relative flex flex-col w-96 h-full overflow-x-clip border-slate-100 flex-shrink-0">
-      <CardHeader className="flex flex-col border-none border-b-[0px] bg-slate-100 pt-4 pb-6">
+    <Card className="relative flex flex-col w-96 h-full overflow-x-clip border-slate-100 flex-shrink-0 rounded-xl">
+      <CardHeader className="flex flex-col border-none border-b-[0px] bg-slate-100 pt-4 pb-6 rounded-t-xl">
         <div className="justify-between flex flex-row items-center">
           <h1 className="font-bold text-2xl">{meal.name}</h1>
           <DropdownMenu>
@@ -41,20 +47,17 @@ const MealCard = ({ meal, handleMealDelete }: MealCardProps) => {
             <DropdownMenuContent className="w-48">
               <DropdownMenuLabel>Meal options</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Button
-                  variant="ghost"
-                  className="w-full h-fit p-1 flex justify-between"
-                >
-                  Rename
-                  <MdEdit size={20} />
-                </Button>
+              <DropdownMenuItem asChild>
+                <MealRenameDialog
+                  mealId={meal.id}
+                  currentName={meal.name}
+                  onMealRenamed={handleMealRename}
+                />
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleMealDelete()}>
                 <Button
                   variant="ghost"
                   className="w-full h-fit p-1 flex justify-between"
-                  onClick={() => handleMealDelete()}
                 >
                   Delete
                   <MdDelete size={20} />

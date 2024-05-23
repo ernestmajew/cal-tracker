@@ -9,7 +9,10 @@ const AddButton = () => {
   };
 
   return (
-    <Button onClick={() => addMeal()} className="rounded-full w-14 h-14">
+    <Button
+      onClick={() => addMeal()}
+      className="rounded-full w-14 h-14 shadow-lg"
+    >
       <FaPlus size={24} />
     </Button>
   );

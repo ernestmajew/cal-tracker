@@ -74,10 +74,12 @@ const AddMealDialog: React.FC<AddMealDialogProps> = ({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
-        className="w-28 h-full flex justify-center items-center bg-slate-100 rounded-xl text-slate-400 hover:text-slate-500 hover:bg-slate-200 transition-all flex-shrink-0"
+        className="group/add w-28 h-full flex justify-center items-center bg-white rounded-xl  hover:bg-slate-50 transition-all flex-shrink-0 border border-slate-100 shadow-sm"
         onClick={() => setIsDialogOpen(true)}
       >
-        <FaPlus size={48} />
+        <Button className="group/add rounded-full bg-slate-200 group-hover/add:bg-slate-300 group-hover/add:text-slate-500 text-slate-400 h-16 w-16">
+          <FaPlus size={48} />
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add meal</DialogTitle>

@@ -77,6 +77,32 @@ const DashboardPage = () => {
     }
   };
 
+  const handleRenameMeal = async (mealId: number, newMealName: string) => {
+    if (!newMealName) return;
+
+    const data = {
+      name: newMealName,
+    };
+
+    try {
+      const response = await fetch(`/api/meals/${mealId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        fetchMeals(selectedDay);
+      } else {
+        console.error("Failed to rename meal");
+      }
+    } catch (error) {
+      console.error("Failed to rename meal:", error);
+    }
+  };
+
   useEffect(() => {
     fetchMeals(selectedDay);
   }, [selectedDay]);
@@ -95,24 +121,27 @@ const DashboardPage = () => {
         <h1 className="font-bold text-3xl">Dashboard</h1>
         <WeekDaySelector onDayChange={handleDayChange} />
       </div>
-      <div className="w-full h-full flex items-center justify-start gap-4 pb-8 overflow-x-scroll overflow-y-hidden">
+      <div className="w-full h-full flex items-center justify-start gap-4 pb-8 overflow-x-scroll overflow-y-hidden relative">
         {meals && meals.length > 0 ? (
           meals.map((meal) => (
             <MealCard
               key={meal.id}
               meal={meal}
               handleMealDelete={() => handleMealDelete(meal.id)}
+              handleMealRename={handleRenameMeal}
             />
           ))
         ) : (
-          <></>
+          <p className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 text-slate-300 text-2xl font-light">
+            No meals were found on that day. Add a new meal
+          </p>
         )}
         <AddMealDialog
           selectedDay={selectedDay}
           onMealAdded={handleMealAdded}
         />
       </div>
-      <div className="flex justify-center items-center w-full p-8 pl-0">
+      <div className="flex justify-center items-center w-full py-8">
         <DataPanel nutrients={nutrients} />
       </div>
     </>

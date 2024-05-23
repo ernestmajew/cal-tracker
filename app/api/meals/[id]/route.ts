@@ -45,6 +45,49 @@ export const PUT = async (req: Request, context: { params: any }) => {
       return new NextResponse("Session not found", { status: 404 });
     }
     const body = await req.json();
+    const { name } = body;
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
+    const existingMeal = await prisma.meal.findUnique({
+      where: {
+        id: mealId,
+      },
+    });
+    if (!mealId) {
+      return new NextResponse("Invalid meal id", { status: 400 });
+    }
+    if (!existingMeal) {
+      return new NextResponse("Meal not found", { status: 404 });
+    }
+    if (existingMeal.userId !== parseInt(session.id)) {
+      return new NextResponse("Meal not assigned to user", { status: 405 });
+    }
+    const updatedMeal = await prisma.meal.update({
+      where: {
+        id: mealId,
+      },
+      data: {
+        name,
+      },
+    });
+    return new NextResponse(JSON.stringify(updatedMeal), { status: 200 });
+  } catch (error) {
+    return new NextResponse("Internal Server Error: " + error, { status: 500 });
+  }
+};
+
+export const PUT_WITH_PRODUCTS = async (
+  req: Request,
+  context: { params: any }
+) => {
+  const mealId = parseInt(context.params.id);
+  try {
+    const session = await getSession();
+    if (!session || !session.id) {
+      return new NextResponse("Session not found", { status: 404 });
+    }
+    const body = await req.json();
     const { name, products } = body;
     const existingMeal = await prisma.meal.findUnique({
       where: {

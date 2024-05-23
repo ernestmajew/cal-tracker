@@ -58,8 +58,10 @@ const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({ onDayChange }) => {
             <a
               key={day.getTime()}
               className={`h-12 w-12 cursor-pointer ${
-                isActiveDay ? "bg-primary text-white" : "bg-slate-200"
-              } rounded-full flex flex-col justify-center items-center text-sm transition-colors`}
+                isActiveDay
+                  ? "bg-primary text-white hover:bg-primary"
+                  : "bg-slate-200"
+              } rounded-full flex flex-col justify-center items-center text-sm transition-colors hover:bg-slate-300`}
               onClick={() => selectDay(day)}
             >
               <span>
