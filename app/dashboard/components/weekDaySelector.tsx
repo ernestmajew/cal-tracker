@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 
 interface WeekDaySelectorProps {
-  onDayChange: (selectedDay: string) => void;
+  onDayChange: (selectedDay: Date) => void;
 }
 
 const getCurrentWeekDays = (weekOffset = 0) => {
@@ -21,11 +21,11 @@ const getCurrentWeekDays = (weekOffset = 0) => {
 
 const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({ onDayChange }) => {
   const [weekOffset, setWeekOffset] = useState(0);
-  const [currentDay, setCurrentDay] = useState(new Date().toDateString());
+  const [currentDay, setCurrentDay] = useState(new Date());
   const weekDays = getCurrentWeekDays(weekOffset);
 
   useEffect(() => {
-    setCurrentDay(new Date().toDateString());
+    setCurrentDay(new Date());
   }, [weekOffset]);
 
   const handlePrevWeek = () => {
@@ -37,10 +37,9 @@ const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({ onDayChange }) => {
   };
 
   const selectDay = (day: Date) => {
-    const selectedDay = day.toDateString();
-    setCurrentDay(selectedDay);
+    setCurrentDay(day);
     if (onDayChange) {
-      onDayChange(selectedDay);
+      onDayChange(day);
     }
   };
 
@@ -54,13 +53,15 @@ const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({ onDayChange }) => {
       </button>
       <div className="w-fit p-2 bg-slate-100 flex justify-center items-center gap-4 rounded-full">
         {weekDays.map((day) => {
-          const isActiveDay = day.toDateString() === currentDay;
+          const isActiveDay = day.toDateString() === currentDay.toDateString();
           return (
             <a
               key={day.getTime()}
               className={`h-12 w-12 cursor-pointer ${
-                isActiveDay ? "bg-primary text-white" : "bg-slate-200"
-              } rounded-full flex flex-col justify-center items-center text-sm transition-colors`}
+                isActiveDay
+                  ? "bg-primary text-white hover:bg-primary"
+                  : "bg-slate-200"
+              } rounded-full flex flex-col justify-center items-center text-sm transition-colors hover:bg-slate-300`}
               onClick={() => selectDay(day)}
             >
               <span>

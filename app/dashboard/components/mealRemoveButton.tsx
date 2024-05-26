@@ -9,7 +9,11 @@ const MealRemoveButton = () => {
   };
 
   return (
-    <Button variant="ghost" onClick={() => click()}>
+    <Button
+      variant="ghost"
+      className="rounded-full w-12 hover:bg-slate-100"
+      onClick={() => click()}
+    >
       <FaMinus size={24} />
     </Button>
   );

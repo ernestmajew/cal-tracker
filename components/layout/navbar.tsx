@@ -11,7 +11,7 @@ export const Navbar = async () => {
   return (
     <>
       <div className="w-28 h-full z-10 backdrop-blur-lg transition-all overflow-clip flex-shrink-0">
-        <div className="h-full container flex flex-col justify-between items-center py-12">
+        <div className="h-full container flex flex-col justify-between items-center py-10">
           <Link href="/dashboard" className="h-12 -mx-3">
             <img src="/logo.png" alt="Logo" className="w-16" />
           </Link>
@@ -19,27 +19,15 @@ export const Navbar = async () => {
           <div className="flex flex-col gap-2 bg-slate-100 p-2 rounded-full">
             <Link
               href="dashboard"
-              className="flex items-center gap-2 p-4 text-slate-800"
+              className="flex items-center justify-center rounded-full w-14 h-14 text-slate-800 hover:bg-slate-200 transition-colors ease-in-out"
             >
               <BiSolidDashboard size={24} />
             </Link>
             <Link
               href="/history"
-              className="flex items-center gap-2 p-4 text-slate-800"
+              className="flex items-center justify-center rounded-full w-14 h-14 text-slate-800 hover:bg-slate-200 transition-colors ease-in-out"
             >
               <FaChartBar size={24} />
-            </Link>
-            <Link
-              href="dashboard"
-              className="flex items-center gap-2 p-4 text-slate-800"
-            >
-              <BiSolidDashboard size={24} />
-            </Link>
-            <Link
-              href="dashboard"
-              className="flex items-center gap-2 p-4 text-slate-800"
-            >
-              <BiSolidDashboard size={24} />
             </Link>
           </div>
           <div className="flex flex-col gap-6 items-center">
