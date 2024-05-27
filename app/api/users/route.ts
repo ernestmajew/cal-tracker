@@ -21,7 +21,12 @@ export const GET = async (req: Request, context: { params: any})=> {
             select: {
                 username: true,
                 email: true,
-            }
+                caloriesTarget: true,
+                protein: true,
+                carbs: true,
+                fat: true,
+                sugar: true
+            },
         });
         if (!user) {
             return new NextResponse(JSON.stringify({ error: 'User not found' }), {status: 404});
@@ -83,3 +88,40 @@ export const POST = async (req: Request)=> {
         return new NextResponse('Internal Server Error' + error, {status: 500});
     }
 }
+
+export const PUT = async (req: Request, context: { params: any }) => {
+    const session = await getSession();
+    try {
+        if (!session.id) {
+            return new NextResponse('Session not found', { status: 404 });
+        }
+        const body = await req.json();
+        const { caloriesTarget, protein, carbs, fat, sugar } = body;
+        const updatedUser = await prisma.user.update({
+            where: { id: parseInt(session.id) },
+            data: {
+                caloriesTarget,
+                protein,
+                carbs,
+                fat,
+                sugar
+            },
+            select: {
+                id: true,
+                email: true,
+                username: true,
+                caloriesTarget: true,
+                protein: true,
+                carbs: true,
+                fat: true,
+                sugar: true
+            },
+        });
+        if (!updatedUser){
+            return new NextResponse(JSON.stringify({ error: 'User not found' }), {status: 404});
+        }
+        return new NextResponse(JSON.stringify(updatedUser), { status: 200 });
+    } catch (error) {
+        return new NextResponse('Internal Server Error' + error, {status: 500});
+    }
+};
