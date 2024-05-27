@@ -16,11 +16,16 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  username String
-  password String
-  meals    Meal[]
+  id             Int    @id @default(autoincrement())
+  email          String @unique
+  username       String
+  password       String
+  caloriesTarget Int    @default(2000)
+  protein        Float? @default(0.0)
+  carbs          Float? @default(0.0)
+  fat            Float? @default(0.0)
+  sugar          Float? @default(0.0)
+  meals          Meal[]
 }
 
 model Nutrition {
