@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -71,14 +73,21 @@ const AddMealDialog: React.FC<AddMealDialogProps> = ({
     }
   };
 
+  useEffect(() => {
+    setIsDialogOpen(false);
+  }, []);
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger
-        className="group/add w-28 h-full flex justify-center items-center bg-white rounded-xl  hover:bg-slate-50 transition-all flex-shrink-0 border border-slate-100 shadow-sm"
-        onClick={() => setIsDialogOpen(true)}
-      >
-        <Button className="group/add rounded-full bg-slate-200 group-hover/add:bg-slate-300 group-hover/add:text-slate-500 text-slate-400 h-16 w-16">
-          <FaPlus size={48} />
+      <DialogTrigger asChild>
+        <Button
+          className="group/add w-28 h-full flex justify-center items-center bg-white rounded-xl hover:bg-slate-50 transition-all flex-shrink-0 border border-slate-100 shadow-sm"
+          onClick={() => setIsDialogOpen(true)}
+        >
+          <FaPlus
+            size={64}
+            className="text-slate-400 border-slate-200 border-2 rounded-full p-2 transition-all bg-slate-200"
+          />
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -47,7 +47,7 @@ const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({ onDayChange }) => {
     <div className="flex items-center gap-2">
       <button
         onClick={handlePrevWeek}
-        className="p-4 rounded-full active:bg-slate-200 transition-colors"
+        className="p-4 rounded-full hover:bg-slate-200 transition-colors"
       >
         <FaChevronLeft />
       </button>
@@ -77,7 +77,7 @@ const WeekDaySelector: React.FC<WeekDaySelectorProps> = ({ onDayChange }) => {
       </div>
       <button
         onClick={handleNextWeek}
-        className="p-4 rounded-full active:bg-slate-200 transition-colors"
+        className="p-4 rounded-full hover:bg-slate-200 transition-colors"
       >
         <FaChevronRight />
       </button>

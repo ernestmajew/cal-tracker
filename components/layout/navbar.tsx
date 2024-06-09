@@ -3,10 +3,10 @@ import { FaChartBar } from "react-icons/fa";
 import { BiSolidDashboard } from "react-icons/bi";
 import LogoutForm from "../logoutForm";
 import { getSession } from "@/utils/actions";
+import { FaUserLarge } from "react-icons/fa6";
 
 export const Navbar = async () => {
   const session = await getSession();
-  console.log(session);
   if (!session.isLoggedIn) return <></>;
   return (
     <>
@@ -31,13 +31,12 @@ export const Navbar = async () => {
             </Link>
           </div>
           <div className="flex flex-col gap-6 items-center">
-            <Link href="/login">
-              <img
-                src="running_0.jpg"
-                className="w-12 h-12 rounded-full object-fill"
-              ></img>
+            <Link
+              href="/user"
+              className="w-14 h-14 bg-slate-100 hover:bg-slate-200 items-center justify-center flex rounded-full text-xl"
+            >
+              <FaUserLarge />
             </Link>
-            <LogoutForm></LogoutForm>
           </div>
         </div>
       </div>

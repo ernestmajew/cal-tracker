@@ -5,9 +5,13 @@ import { logout } from "@/utils/actions";
 
 const LogoutForm = () => {
   return (
-    <form action={logout}>
-      <Button variant="ghost" className="rounded-full">
-        <MdOutlineLogout size={32} />
+    <form action={logout} className="w-full">
+      <Button
+        variant={"secondary"}
+        className=" text-red-500 hover:text-red-400 w-full"
+      >
+        <span className="pr-4">Logout</span>
+        <MdOutlineLogout size={20} />
       </Button>
     </form>
   );

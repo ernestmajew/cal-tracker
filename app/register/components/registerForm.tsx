@@ -12,7 +12,7 @@ const RegisterForm = () => {
   return (
     <form className="flex flex-col gap-4 pb-16" action={formAction}>
       <div className="grid w-full items-center gap-1.5">
-        <Label htmlFor="username">Email</Label>
+        <Label htmlFor="username">Username</Label>
         <Input
           type="text"
           id="username"

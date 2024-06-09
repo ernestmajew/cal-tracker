@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   Dialog,
@@ -28,7 +30,7 @@ const MealRenameDialog: React.FC<MealRenameDialogProps> = ({
 
   const handleRename = () => {
     setIsDialogOpen(false);
-    onMealRenamed(mealId, newMealName);
+    onMealRenamed(mealId, newMealName); // Call the callback to update the meal
   };
 
   return (

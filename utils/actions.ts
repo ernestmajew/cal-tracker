@@ -10,11 +10,10 @@ import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
-import {calculateTotalNutrition, weights} from "@/utils/totalNutrition";
+import { calculateTotalNutrition, weights } from "@/utils/totalNutrition";
 import { jwtVerify } from "jose";
-import prisma from "@/prisma/prismaClient";
 import { comparePasswords, hashPassword } from "./password";
-
+import prisma from "@/prisma/prismaClient";
 
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
@@ -24,6 +23,83 @@ export const getSession = async () => {
   }
 
   return session;
+};
+
+export const getUser = async () => {
+  const session = await getSession();
+  const user = prisma.user.findUnique({
+    where: {
+      //@ts-ignore
+      id: parseInt(session.id),
+    },
+  });
+
+  return user;
+};
+
+export const goalSubmit = async (
+  prevState: undefined | string,
+  formData: FormData
+) => {
+  console.log(formData);
+  const calories = formData.get("calories");
+  const proteins = formData.get("proteins");
+  const fats = formData.get("fats");
+  const carbs = formData.get("carbs");
+  const id = formData.get("id");
+
+  if (!calories) {
+    return { error: "Invalid calories!" };
+  }
+
+  if (!proteins) {
+    return { error: "Invalid proteins!" };
+  }
+
+  if (!fats) {
+    return { error: "Invalid fats!" };
+  }
+
+  if (!carbs) {
+    return { error: "Invalid carbs!" };
+  }
+
+  if (!id) {
+    return { error: "Invalid id!" };
+  }
+
+  const session = await getSession();
+  if (!session || !session.id) {
+    return { error: "Session not found" };
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(id as string) },
+      data: {
+        caloriesTarget: parseInt(calories as string),
+        protein: parseInt(proteins as string),
+        carbs: parseInt(carbs as string),
+        fat: parseInt(fats as string),
+        sugar: 0,
+      },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        caloriesTarget: true,
+        protein: true,
+        carbs: true,
+        fat: true,
+        sugar: true,
+      },
+    });
+
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return { error: "Error updating user" };
+  }
 };
 
 export const login = async (
@@ -138,8 +214,6 @@ export const verifyAuth = async () => {
       token,
       new TextEncoder().encode(process.env.JWT_SECRET)
     );
-    console.log("VERIFY");
-    console.log(verified);
     return verified.payload as UserJwtPayload;
   } catch (error) {
     throw new Error("Your token has expired.");

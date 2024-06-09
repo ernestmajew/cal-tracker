@@ -1,28 +1,54 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getSession } from "@/utils/actions";
-import MealCard from "./components/mealCard";
+import { getSession, getUser } from "@/utils/actions";
+import { MealCard } from "./components/mealCard";
 import WeekDaySelector from "@/app/dashboard/components/weekDaySelector";
 import { useRouter } from "next/navigation";
 import AddMealDialog from "./components/addMealDialog";
 import { Meal } from "@/models/models";
 import DataPanel from "./components/dataPanel";
+import { User } from "@prisma/client";
+import { useToast } from "@/components/ui/use-toast";
+
+interface DataPanelProps {
+  totalCalories: number;
+  totalProtein: number;
+  totalCarbs: number;
+  totalFat: number;
+  goalCalories: number;
+  goalProtein: number;
+  goalCarbs: number;
+  goalFat: number;
+}
 
 const DashboardPage = () => {
   const [meals, setMeals] = useState<Meal[] | null>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const [nutrients, setNutrients] = useState({
+  const [nutrients, setNutrients] = useState<DataPanelProps>({
     totalCalories: 0,
     totalProtein: 0,
     totalCarbs: 0,
     totalFat: 0,
-    goalCalories: 2000,
-    goalProtein: 150,
-    goalCarbs: 300,
-    goalFat: 70,
+    goalCalories: 0,
+    goalProtein: 0,
+    goalCarbs: 0,
+    goalFat: 0,
   });
   const router = useRouter();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    getUser().then((res) => {
+      setNutrients({
+        ...nutrients,
+        goalCalories: res?.caloriesTarget!,
+        goalProtein: res?.protein!,
+        goalCarbs: res?.carbs!,
+        goalFat: res?.fat!,
+      });
+    });
+  }, [meals]);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -71,7 +97,16 @@ const DashboardPage = () => {
     try {
       const response = await fetch(`/api/meals/${id}`, {
         method: "DELETE",
-      }).then(handleMealAdded);
+      });
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Meal deleted",
+        });
+        handleMealUpdated();
+      } else {
+        console.error("Failed to delete meal");
+      }
     } catch (error) {
       console.error("Failed to delete meal:", error);
     }
@@ -115,9 +150,13 @@ const DashboardPage = () => {
     fetchMeals(selectedDay);
   };
 
+  const handleMealUpdated = () => {
+    fetchMeals(selectedDay);
+  };
+
   return (
     <>
-      <div className="py-8 flex justify-between items-center h-100vh">
+      <div className="h-[9rem] flex justify-between items-center">
         <h1 className="font-bold text-3xl">Dashboard</h1>
         <WeekDaySelector onDayChange={handleDayChange} />
       </div>
@@ -129,6 +168,7 @@ const DashboardPage = () => {
               meal={meal}
               handleMealDelete={() => handleMealDelete(meal.id)}
               handleMealRename={handleRenameMeal}
+              onMealUpdated={handleMealUpdated}
             />
           ))
         ) : (
@@ -141,8 +181,8 @@ const DashboardPage = () => {
           onMealAdded={handleMealAdded}
         />
       </div>
-      <div className="flex justify-center items-center w-full py-8">
-        <DataPanel nutrients={nutrients} />
+      <div className="flex justify-center items-center w-full p-8 pl-0">
+        <DataPanel {...nutrients} />
       </div>
     </>
   );

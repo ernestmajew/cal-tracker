@@ -8,9 +8,10 @@ interface Product {
 }
 
 export const GET = async (req: Request) => {
-  const session = await getSession();
   try {
-    if (!session.id) {
+    const session = await getSession();
+
+    if (!session || !session.id) {
       return new NextResponse("Session not found", { status: 404 });
     }
 
@@ -38,13 +39,31 @@ export const GET = async (req: Request) => {
         },
       },
       include: {
-        products: true,
+        products: {
+          include: {
+            product: {
+              include: {
+                nutrition: true,
+              },
+            },
+          },
+        },
       },
     });
 
-    return new NextResponse(JSON.stringify(meals), { status: 200 });
+    const formattedMeals = meals.map((meal) => ({
+      ...meal,
+      products: meal.products.map((productWeight) => ({
+        id: productWeight.product.id,
+        name: productWeight.product.name,
+        weight: productWeight.weight,
+        nutrition: productWeight.product.nutrition,
+      })),
+    }));
+
+    return new NextResponse(JSON.stringify(formattedMeals), { status: 200 });
   } catch (error) {
-    return new NextResponse("Internal Server Error" + error, { status: 500 });
+    return new NextResponse("Internal Server Error: " + error, { status: 500 });
   }
 };
 

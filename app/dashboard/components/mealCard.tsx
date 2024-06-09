@@ -20,18 +20,26 @@ interface MealCardProps {
   meal: Meal;
   handleMealDelete: VoidFunction;
   handleMealRename: (mealId: number, newMealName: string) => void;
+  onMealUpdated: VoidFunction;
 }
 
-const MealCard = ({
+export const MealCard = ({
   meal,
   handleMealDelete,
   handleMealRename,
+  onMealUpdated,
 }: MealCardProps) => {
+  function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
-    <Card className="relative flex flex-col w-96 h-full overflow-x-clip border-slate-100 flex-shrink-0 rounded-xl">
+    <Card className="relative flex flex-col w-[400px] h-full overflow-x-clip border-slate-100 flex-shrink-0 rounded-xl">
       <CardHeader className="flex flex-col border-none border-b-[0px] bg-slate-100 pt-4 pb-6 rounded-t-xl">
         <div className="justify-between flex flex-row items-center">
-          <h1 className="font-bold text-2xl">{meal.name}</h1>
+          <h1 className="font-bold text-2xl">
+            {capitalizeFirstLetter(meal.name)}
+          </h1>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button
@@ -66,28 +74,33 @@ const MealCard = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="grid grid-cols-4 gap-12 font-semibold">
+        <div className="grid grid-cols-4 gap-12 font-semibold ">
           <span>Cal.</span>
           <span>Prot.</span>
           <span>Carbs</span>
           <span>Fats</span>
         </div>
-        <div className="grid grid-cols-4 gap-12">
-          <span>{meal.totalCalories || 0} kcal</span>
-          <span>{meal.totalProtein || 0} g</span>
-          <span>{meal.totalCarbs || 0} g</span>
-          <span>{meal.totalFat || 0} g</span>
+        <div className="grid grid-cols-4 gap-12 text-nowrap">
+          <span>{meal.totalCalories?.toFixed() || 0} kcal</span>
+          <span>{meal.totalProtein?.toFixed() || 0} g</span>
+          <span>{meal.totalCarbs?.toFixed() || 0} g</span>
+          <span>{meal.totalFat?.toFixed() || 0} g</span>
         </div>
       </CardHeader>
-      <CardContent className="">
+      <CardContent>
         {meal.products.length > 0 &&
-          meal.products.map((product) => <MealContent key={product.id} />)}
+          meal.products.map((product) => (
+            <MealContent
+              key={product.id}
+              product={product}
+              mealId={meal.id}
+              onMealUpdated={onMealUpdated}
+            />
+          ))}
       </CardContent>
       <div className="h-fit w-fit absolute bottom-6 right-6">
-        <AddButton />
+        <AddButton mealId={meal.id} onProductAdded={onMealUpdated} />
       </div>
     </Card>
   );
 };
-
-export default MealCard;
