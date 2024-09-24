@@ -10,6 +10,12 @@ Features
 
 ## Running the application
 
+Start docker container fro database:
+
+```
+docker compose up
+```
+
 Run the development server:
 
 ```
