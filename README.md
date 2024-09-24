@@ -10,7 +10,7 @@ Features
 
 ## Running the application
 
-Start docker container fro database:
+Start docker container with database:
 
 ```
 docker compose up
